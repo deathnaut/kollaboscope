@@ -3,6 +3,7 @@ import Search from './Search';
 import Videos from './Videos';
 import '../styles/Playlist.css';
 import { database } from '../utils/firebase';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 class Playlist extends Component {
   constructor(props) {
@@ -11,7 +12,9 @@ class Playlist extends Component {
     this.state = {
       name: '',
       description: '',
-      playlistRef: null // loading db reference in state because it loads asynchronously
+      playlistRef: null, // loading db reference in state because it loads asynchronously
+      link: '',
+      copied: false,
     }
 
     this._handleDeletePlaylist = this._handleDeletePlaylist.bind(this);
@@ -24,7 +27,8 @@ class Playlist extends Component {
 
     // setting db reference for this playlist
     this.setState({
-      playlistRef: playlistRef
+      playlistRef: playlistRef,
+      link: "https://kollaboscope-183217.firebaseapp.com/"+`${playlistId}`,
     });
 
     // listening for changes to this playlist's info
@@ -58,24 +62,31 @@ class Playlist extends Component {
         <div>
           <header>
             <p>copy and share this link to kollaborate with your friends:</p>
-            <span id="share-link">kollaboscope-183217.firebaseapp.com/{window.location.pathname.slice(1)}</span>
-            <div id="playlist-title">
-              <h1 className="playlist-name">{this.state.name}</h1>
-              <h2 className="playlist-descr">{this.state.description}</h2>
+            <span id="share-link">https://kollaboscope-183217.firebaseapp.com/{window.location.pathname.slice(1)}</span>
+            <CopyToClipboard text={this.state.link} onCopy={() => this.setState({copied: true})}>
+              <button id="copy-btn">{ this.state.copied ? "copied!" : "copy link" }</button>
+            </CopyToClipboard>
+            <div className="lowercase">
+              <div id="playlist-title">
+                <h1 className="playlist-name">{this.state.name}</h1>
+                <h2 className="playlist-descr">{this.state.description}</h2>
+              </div>
+              <nav>
+                <button id="go-home"
+                  onClick={this._goHome}>Go Back Home
+                </button>
+                <button id="deletePlaylistBtn"
+                  onClick={this._handleDeletePlaylist}>Delete playlist
+                </button>
+              </nav>
             </div>
-            <nav>
-              <button id="go-home"
-                onClick={this._goHome}>Go Back Home
-              </button>
-              <button id="deletePlaylistBtn"
-                onClick={this._handleDeletePlaylist}>Delete playlist
-              </button>
-            </nav>
           </header>
-          <div className="playlist-container">
-            <Search playlistRef={this.state.playlistRef} />
-            <Videos playlistRef={this.state.playlistRef} />
-          </div>
+            <div className="lowercase">
+              <div className="playlist-container">
+                <Search playlistRef={this.state.playlistRef} />
+                <Videos playlistRef={this.state.playlistRef} />
+              </div>
+            </div>
         </div>
       );
     } else {

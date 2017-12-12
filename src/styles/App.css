@@ -11,12 +11,11 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
 
-  text-transform: lowercase !important;
-  /*display: flex;*/
-  /*flex-direction: column;*/
-  /*text-align: center;*/
-
   color: white;
+}
+
+.lowercase {
+  text-transform: lowercase;
 }
 
 h2 {

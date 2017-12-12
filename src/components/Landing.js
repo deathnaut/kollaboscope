@@ -5,7 +5,7 @@ import '../styles/Landing.css';
 class Landing extends Component {
   render() {
     return (
-      <div className="Landing">
+      <div className="Landing lowercase">
         <header>
           <h1>KOLLABOSCOPE</h1>
         </header>
